@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import miFoto from './assets/gabriel.jpg';
 import { 
   Database, 
   BarChart3, 
@@ -100,29 +101,29 @@ const DATA = {
     },
     projects: [
       {
-        title: "Market Intelligence: Coffee Shop",
-        context: "Cadena de café necesitaba optimizar expansión y mix de productos.",
-        challenge: "Entender rendimiento considerando ubicación y competencia mediante análisis espacial.",
-        solution: "Buffer Analysis en Tableau con parámetros dinámicos y navegación intuitiva por íconos.",
-        result: "Identificación de zonas de oportunidad, impactando directamente en marketing y expansión.",
+        title: "Market Intelligence & Expansión",
+        context: "Cadena de retail gastronómico buscaba reducir el riesgo en la apertura de nuevas sucursales.",
+        challenge: "Predecir el éxito de una ubicación basado en la saturación del mercado y proximidad de competidores.",
+        solution: "Desarrollo de un análisis geoespacial (Buffer Analysis) en Tableau integrando fuentes de datos abiertas y privadas.",
+        result: "Reducción del 20% en el tiempo de prospección de locales y una hoja de ruta clara para la expansión 2026.",
         tags: ["Tableau", "Análisis Espacial", "Market Intelligence"],
         link: "https://public.tableau.com"
       },
       {
-        title: "Retail Sales Performance",
-        context: "Empresa retail con múltiples regiones y categorías con dificultad para detectar pérdidas.",
-        challenge: "Detectar pérdidas y analizar performance interanual YoY en tiempo real.",
-        solution: "Preparación de datos en SQL + Tableau (YoY + LOD) con diseño centrado en KPIs críticos.",
-        result: "Detección inmediata de fugas de rentabilidad y mejora en decisiones comerciales regionales.",
-        tags: ["SQL", "Tableau", "KPI Design"],
+        title: "Retail Performance Engine (SQL + BI)",
+        context: "Empresa con +5000 SKUs y múltiples regiones presentaba inconsistencias en sus reportes de rentabilidad.",
+        challenge: "Identificar fugas de margen operativo y variaciones interanuales (YoY) en tiempo real.",
+        solution: "Pipeline de datos robusto en SQL con cálculos avanzados (LOD) para garantizar una 'Single Source of Truth'.",
+        result: "Ahorro de 15 horas mensuales en preparación de datos y detección inmediata de 3 categorías sub-rentables.",
+        tags: ["SQL", "Tableau", "LOD Expressions"],
         link: "https://public.tableau.com"
       },
       {
-        title: "Sistema de Inventario Inteligente",
-        context: "Bulonería con +3500 productos operando procesos manuales.",
-        challenge: "Ineficiencia operativa y errores constantes en carga de stock y precios.",
-        solution: "Ecosistema AppSheet + AppScript para automatización de logs e historial de precios.",
-        result: "Automatización end-to-end, reducción drástica de errores y visibilidad total de inventario.",
+        title: "Smart Inventory Ecosystem (Low-Code)",
+        context: "Empresa de suministros industriales con procesos de inventario 100% manuales y alta tasa de error.",
+        challenge: "Eliminar el desfase de stock y centralizar la carga de precios desde el punto de venta.",
+        solution: "Ecosistema integral en AppSheet con automatizaciones vía AppScript y base de datos en Google Sheets.",
+        result: "Digitalización total del proceso (Paperless) y eliminación completa de errores de facturación por precios desactualizados.",
         tags: ["AppSheet", "AppScript", "Automatización"],
         link: "#"
       }
@@ -146,6 +147,7 @@ const DATA = {
 export default function App() {
   const [lang, setLang] = useState('es');
   const [isDark, setIsDark] = useState(true);
+  const [currentProject, setCurrentProject] = useState(0); // <-- MOVIDO AQUÍ ADENTRO
   const t = DATA[lang];
 
   useEffect(() => {
@@ -195,6 +197,16 @@ export default function App() {
           <h1 className="text-5xl md:text-8xl font-extrabold mb-6 leading-[1.1]">
             {t.hero.title} <br />
             <span className="gradient-text">{t.hero.titleAccent}</span>
+            {/* Ejemplo de círculo de perfil en el Hero */}
+<div className="mb-8 flex justify-center">
+  <div className="w-32 h-32 rounded-full border-4 border-blue-600 overflow-hidden shadow-xl">
+    <img 
+      src={miFoto} 
+      alt="Gabriel - Data Analyst" 
+      className="w-full h-full object-cover"
+    />
+  </div>
+</div>
           </h1>
           <p className="text-lg md:text-xl text-zinc-500 dark:text-zinc-400 mb-10 max-w-2xl mx-auto leading-relaxed">
             {t.hero.description}
@@ -230,56 +242,92 @@ export default function App() {
         </div>
       </section>
 
-      {/* Projects Section */}
-      <section id="projects" className="py-24 px-6">
+      {/* Projects Section - Carousel Style */}
+      <section id="projects" className="py-24 px-6 overflow-hidden">
         <div className="max-w-7xl mx-auto">
-          <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-4">
+          <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-4">
             <div>
-              <h2 className="text-4xl md:text-6xl uppercase">{t.nav.projects}</h2>
-              <p className="text-blue-500 font-bold uppercase tracking-widest text-sm mt-2">Solving Business Puzzles</p>
+              <h2 className="text-4xl md:text-6xl uppercase tracking-tighter font-display">{t.nav.projects}</h2>
+              <div className="h-1 w-20 bg-blue-600 mt-2"></div>
+            </div>
+            
+            {/* Controles del Carrusel */}
+            <div className="flex gap-4">
+              <button 
+                onClick={() => setCurrentProject(prev => prev === 0 ? t.projects.length - 1 : prev - 1)}
+                className="p-4 rounded-full glass hover:bg-zinc-200 dark:hover:bg-zinc-800 transition-all border border-zinc-200 dark:border-zinc-800"
+              >
+                <ChevronRight className="rotate-180" size={24} />
+              </button>
+              <button 
+                onClick={() => setCurrentProject(prev => prev === t.projects.length - 1 ? 0 : prev + 1)}
+                className="p-4 rounded-full glass hover:bg-zinc-200 dark:hover:bg-zinc-800 transition-all border border-zinc-200 dark:border-zinc-800"
+              >
+                <ChevronRight size={24} />
+              </button>
             </div>
           </div>
 
-          <div className="grid gap-12">
+          {/* Contenedor del Proyecto Activo */}
+          <div className="relative min-h-[550px] md:min-h-[500px] flex items-center">
             {t.projects.map((project, idx) => (
-              <div key={idx} className="group relative grid md:grid-cols-2 gap-8 p-1 rounded-[2rem] bg-gradient-to-br from-zinc-200 to-transparent dark:from-zinc-800 dark:to-transparent">
-                <div className="bg-white dark:bg-dark-bg p-8 md:p-12 rounded-[1.9rem] flex flex-col h-full">
-                  <div className="flex flex-wrap gap-2 mb-6">
-                    {project.tags.map(tag => (
-                      <span key={tag} className="px-3 py-1 bg-zinc-100 dark:bg-zinc-800 rounded-full text-[10px] font-bold uppercase tracking-tighter text-zinc-500">
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                  <h3 className="text-3xl md:text-4xl mb-6">{project.title}</h3>
-                  
-                  <div className="space-y-6 flex-grow">
+              <div 
+                key={idx}
+                className={`absolute inset-0 transition-all duration-700 ease-in-out transform ${
+                  idx === currentProject ? 'opacity-100 translate-x-0 scale-100' : 'opacity-0 translate-x-20 scale-95 pointer-events-none'
+                }`}
+              >
+                <div className="grid md:grid-cols-2 gap-8 h-full items-stretch">
+                  {/* Info del Proyecto */}
+                  <div className="bg-white dark:bg-zinc-900/50 p-8 md:p-12 rounded-[2.5rem] border border-zinc-100 dark:border-zinc-800 flex flex-col justify-between shadow-2xl shadow-blue-500/5">
                     <div>
-                      <p className="text-blue-500 text-[10px] font-extrabold uppercase tracking-widest mb-1">Context</p>
-                      <p className="text-sm text-zinc-600 dark:text-zinc-400">{project.context}</p>
+                      <div className="flex flex-wrap gap-2 mb-6">
+                        {project.tags.map(tag => (
+                          <span key={tag} className="px-3 py-1 bg-blue-500/10 text-blue-500 rounded-full text-[10px] font-bold uppercase tracking-widest">
+                            {tag}
+                          </span>
+                        ))}
+                      </div>
+                      <h3 className="text-3xl md:text-5xl mb-6 font-display leading-none">{project.title}</h3>
+                      
+                      <div className="space-y-4 mb-8">
+                        <p className="text-zinc-500 dark:text-zinc-400 text-sm leading-relaxed border-l-2 border-zinc-200 dark:border-zinc-800 pl-4">
+                          {project.challenge}
+                        </p>
+                        <div className="p-5 bg-zinc-50 dark:bg-zinc-800/50 rounded-2xl">
+                          <p className="text-emerald-500 text-[10px] font-bold uppercase tracking-widest mb-2">Impacto Directo</p>
+                          <p className="text-lg font-medium dark:text-zinc-100">{project.result}</p>
+                        </div>
+                      </div>
                     </div>
-                    <div>
-                      <p className="text-blue-500 text-[10px] font-extrabold uppercase tracking-widest mb-1">Challenge</p>
-                      <p className="text-sm text-zinc-600 dark:text-zinc-400">{project.challenge}</p>
-                    </div>
-                    <div className="p-4 bg-zinc-50 dark:bg-zinc-900/50 rounded-2xl border border-zinc-100 dark:border-zinc-800">
-                      <p className="text-emerald-500 text-[10px] font-extrabold uppercase tracking-widest mb-1">Solution & Impact</p>
-                      <p className="text-sm font-medium mb-2">{project.solution}</p>
-                      <p className="text-sm text-emerald-600 dark:text-emerald-400 font-semibold">{project.result}</p>
-                    </div>
+
+                    <a href={project.link} className="inline-flex items-center gap-3 text-blue-500 font-bold hover:gap-5 transition-all">
+                      Ver solución técnica <ExternalLink size={20} />
+                    </a>
                   </div>
 
-                  <a href={project.link} className="mt-8 inline-flex items-center gap-2 text-blue-500 font-bold text-sm group-hover:gap-4 transition-all">
-                    Explore Solution <ExternalLink size={16} />
-                  </a>
-                </div>
-                
-                <div className="hidden md:block relative overflow-hidden rounded-[1.9rem] bg-zinc-100 dark:bg-zinc-900">
-                   <div className="absolute inset-0 flex items-center justify-center">
-                      <BarChart3 size={120} className="text-zinc-200 dark:text-zinc-800 transform rotate-12 group-hover:scale-110 transition-transform" />
-                   </div>
+                  {/* Visual/Gráfico */}
+                  <div className="hidden md:flex items-center justify-center rounded-[2.5rem] bg-gradient-to-br from-blue-600 to-indigo-900 overflow-hidden relative group">
+                    <div className="absolute inset-0 opacity-20 bg-grid"></div>
+                    <BarChart3 size={180} className="text-white opacity-40 group-hover:scale-110 transition-transform duration-500" />
+                    <div className="absolute bottom-8 left-8 right-8 p-6 glass rounded-2xl">
+                      <p className="text-white text-xs font-bold uppercase tracking-widest opacity-60 mb-1">Tecnología Principal</p>
+                      <p className="text-white text-xl font-display uppercase tracking-widest">{project.tags[0]}</p>
+                    </div>
+                  </div>
                 </div>
               </div>
+            ))}
+          </div>
+          
+          {/* Indicadores de puntos */}
+          <div className="flex justify-center gap-2 mt-8">
+            {t.projects.map((_, idx) => (
+              <button 
+                key={idx}
+                onClick={() => setCurrentProject(idx)}
+                className={`h-2 transition-all rounded-full ${idx === currentProject ? 'w-8 bg-blue-600' : 'w-2 bg-zinc-300 dark:bg-zinc-700'}`}
+              />
             ))}
           </div>
         </div>
@@ -317,14 +365,14 @@ export default function App() {
           <h2 className="text-4xl md:text-7xl mb-8 uppercase">{t.cta.title}</h2>
           <p className="text-xl text-zinc-500 dark:text-zinc-400 mb-12">{t.cta.desc}</p>
           <div className="flex flex-wrap justify-center gap-6">
-            <a href="mailto:email@example.com" className="px-10 py-5 bg-blue-600 text-white rounded-2xl font-bold text-lg hover:bg-blue-700 transition-all flex items-center gap-3">
+            <a href="mailto:tuemail@ejemplo.com" className="px-10 py-5 bg-blue-600 text-white rounded-2xl font-bold text-lg hover:bg-blue-700 transition-all flex items-center gap-3">
               <Mail /> {t.cta.button}
             </a>
             <div className="flex items-center gap-4">
-              <a href="#" className="w-14 h-14 glass rounded-2xl flex items-center justify-center hover:text-blue-500 transition-colors">
+              <a href="https://linkedin.com/in/tu-usuario" className="w-14 h-14 glass rounded-2xl flex items-center justify-center hover:text-blue-500 transition-colors">
                 <Linkedin />
               </a>
-              <a href="#" className="w-14 h-14 glass rounded-2xl flex items-center justify-center hover:text-blue-500 transition-colors">
+              <a href="https://github.com/tu-usuario" className="w-14 h-14 glass rounded-2xl flex items-center justify-center hover:text-blue-500 transition-colors">
                 <Github />
               </a>
             </div>

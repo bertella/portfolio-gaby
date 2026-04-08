@@ -2,7 +2,7 @@
 
 ### Operations & Data Analyst | Real Estate Professional
 
-Este es mi portfolio personal desarrollado con **React** y **Tailwind CSS**. Aquí centralizo mi experiencia en análisis de datos, automatización de procesos y desarrollo de soluciones Low-Code.
+Este es mi portfolio personal desarrolgitlado con **React** y **Tailwind CSS**. Aquí centralizo mi experiencia en análisis de datos, automatización de procesos y desarrollo de soluciones Low-Code.
 
 ## 🚀 Proyectos Destacados
 * **Market Intelligence:** Análisis espacial con Tableau para cadenas de café.
